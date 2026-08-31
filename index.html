@@ -321,20 +321,48 @@
     }
     .quiz-options { display: flex; flex-direction: column; gap: 0.7rem; }
     .quiz-opt {
-      background: var(--gray-bg); border: 1px solid var(--gray-mid);
-      padding: 1.05rem 1.4rem; font-family: 'Jost', sans-serif;
+      background: var(--white); border: 1px solid var(--gray-mid);
+      padding: 1.1rem 1.4rem; font-family: 'Jost', sans-serif;
       font-size: 0.88rem; font-weight: 400; color: var(--text);
       text-align: left; cursor: pointer;
       transition: border-color 0.15s, background 0.15s, transform 0.15s;
       display: flex; align-items: center; gap: 1rem;
     }
-    .quiz-opt:hover { border-color: var(--blue); background: var(--white); transform: translateX(3px); }
+    .quiz-opt:hover { border-color: var(--blue); background: var(--gray-bg); transform: translateX(3px); }
     .quiz-opt-key {
       font-size: 0.62rem; letter-spacing: 0.16em; color: var(--silver);
       border: 1px solid var(--gray-mid); width: 1.6rem; height: 1.6rem;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--white);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--gray-bg);
     }
     .quiz-opt:hover .quiz-opt-key { border-color: var(--blue); color: var(--blue); }
+
+    /* QUESTION SHELL — instrument */
+    .quiz-card.qmode { padding: 0; display: grid; grid-template-columns: 264px 1fr; }
+    .q-rail {
+      background: var(--gray-bg); border-right: 1px solid var(--gray-mid);
+      padding: 2rem 1.6rem; display: flex; flex-direction: column;
+    }
+    .q-rail-label { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--silver); margin-bottom: 1.4rem; }
+    .q-count { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 3.2rem; line-height: 1; color: var(--blue); }
+    .q-count-sub { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--silver); margin-top: 0.2rem; }
+    .q-rail-bottom { margin-top: auto; padding-top: 2rem; }
+    .q-tiles-label { font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--silver); margin-bottom: 0.6rem; }
+    .q-tiles { display: grid; grid-template-columns: repeat(8, 16px); gap: 4px; margin-bottom: 1.2rem; }
+    .q-tile { width: 16px; height: 16px; box-sizing: border-box; }
+    .q-tile.done { background: var(--blue); }
+    .q-tile.now { background: var(--white); border: 1px solid var(--blue); }
+    .q-tile.todo { border: 1px dashed var(--silver); }
+    .q-keys { font-size: 0.6rem; letter-spacing: 0.14em; color: var(--silver); }
+    .q-strip { display: none; background: var(--gray-bg); border-bottom: 1px solid var(--gray-mid); padding: 1rem 1.1rem 0.9rem; }
+    .q-strip-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.7rem; }
+    .q-strip-count { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400; color: var(--blue); }
+    .q-strip-count span { font-size: 0.7rem; font-family: 'Jost', sans-serif; letter-spacing: 0.14em; color: var(--silver); }
+    .q-segs { display: flex; gap: 3px; }
+    .q-seg { flex: 1; height: 6px; box-sizing: border-box; }
+    .q-seg.done { background: var(--blue); }
+    .q-seg.now { background: var(--white); border: 1px solid var(--blue); }
+    .q-seg.todo { border: 1px dashed var(--silver); }
+    .q-main { padding: 2.6rem 3rem 2.2rem; display: flex; flex-direction: column; }
     .quiz-nav { margin-top: 1.8rem; display: flex; justify-content: space-between; align-items: center; }
     .quiz-back {
       background: none; border: none; font-family: 'Jost', sans-serif;
@@ -386,18 +414,19 @@
       color: var(--silver); margin-bottom: 0.6rem;
     }
     .quiz-items-note { font-size: 0.82rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.6rem; }
+    .quiz-items-label.primary { color: var(--blue); font-weight: 500; }
     .start-item {
       background: var(--gray-bg); border-left: 3px solid var(--blue);
-      padding: 1.6rem 1.7rem; margin-bottom: 0.9rem;
-      display: flex; gap: 1.4rem; align-items: flex-start;
+      padding: 1.7rem 1.9rem; margin-bottom: 1rem;
+      display: flex; gap: 1.6rem; align-items: flex-start;
     }
     .start-rank {
-      font-family: 'Cormorant Garamond', serif; font-size: 2rem;
-      font-weight: 300; color: var(--blue); line-height: 1; flex-shrink: 0; min-width: 1.6rem;
+      font-family: 'Cormorant Garamond', serif; font-size: 2.6rem;
+      font-weight: 300; color: var(--blue); line-height: 1; flex-shrink: 0; min-width: 2.2rem;
     }
     .start-body { flex-grow: 1; }
     .gap-item-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
-    .gap-item-title { font-family: 'Cormorant Garamond', serif; font-size: 1.12rem; font-weight: 500; color: var(--blue); }
+    .gap-item-title { font-family: 'Cormorant Garamond', serif; font-size: 1.28rem; font-weight: 500; color: var(--blue); }
     .gap-tag {
       font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--amber); background: var(--amber-bg); padding: 0.2rem 0.55rem; white-space: nowrap;
@@ -412,9 +441,24 @@
     .gap-item-first b { font-weight: 500; color: var(--blue); }
     .gap-item-who { font-size: 0.73rem; letter-spacing: 0.05em; color: var(--blue-mid); }
     .gap-item-who b { font-weight: 500; }
-    .gap-item {
-      background: var(--gray-bg); border-left: 3px solid var(--silver-light);
-      padding: 1.3rem 1.6rem; margin-bottom: 0.8rem;
+    .ledger { border-top: 1px solid var(--gray-mid); }
+    .ledger-row { border-bottom: 1px solid var(--gray-mid); }
+    .ledger-head {
+      display: flex; align-items: baseline; gap: 1.1rem; width: 100%;
+      padding: 0.95rem 0.2rem; background: none; border: none; cursor: pointer;
+      text-align: left; font-family: 'Jost', sans-serif;
+    }
+    .ledger-num { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--silver); min-width: 1.5rem; flex-shrink: 0; }
+    .ledger-title { font-size: 0.92rem; font-weight: 400; color: var(--text); flex-grow: 1; }
+    .gap-tag.sm { font-size: 0.55rem; padding: 0.18rem 0.5rem; }
+    .ledger-toggle { font-size: 1.1rem; color: var(--silver); line-height: 1; flex-shrink: 0; }
+    .ledger-row.open .ledger-toggle { color: var(--blue); }
+    .ledger-body { display: none; padding: 0 0.2rem 1.2rem 2.85rem; }
+    .ledger-row.open .ledger-body { display: block; }
+    .ledger-body .gap-tag { display: none; }
+    @media (max-width: 480px) {
+      .ledger-head .gap-tag { display: none; }
+      .ledger-body .gap-tag { display: inline-block; margin-bottom: 0.5rem; }
     }
     .quiz-clear {
       background: var(--gray-bg); border-left: 3px solid var(--green);
@@ -422,10 +466,14 @@
     }
     .urgent-flag {
       background: var(--amber-bg); border-left: 3px solid var(--amber);
-      padding: 1.5rem 1.7rem; margin-bottom: 2.2rem;
+      padding: 1.8rem 2rem; margin-bottom: 2.6rem;
+    }
+    .urgent-kicker {
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--amber); font-weight: 500; margin-bottom: 0.6rem;
     }
     .urgent-flag-head {
-      font-family: 'Cormorant Garamond', serif; font-size: 1.25rem;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.4rem;
       font-weight: 500; color: var(--amber); margin-bottom: 0.7rem;
     }
     .urgent-flag-body { font-size: 0.85rem; line-height: 1.8; color: var(--text); }
@@ -538,6 +586,13 @@
       .work-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 900px) {
+      .quiz-card.qmode { grid-template-columns: 1fr; min-height: 76svh; }
+      .qmode .quiz-progress-meta:not(.closing-meta) { display: none; }
+      .qmode .closing-meta .quiz-group { display: none; }
+      .q-rail { display: none; }
+      .q-strip { display: block; }
+      .q-main { padding: 1.8rem 1.4rem 1.4rem; flex-grow: 1; }
+      .quiz-opt { min-height: 56px; }
       .split-grid { grid-template-columns: 1fr; margin-top: -5rem; }
       .split-panel:first-child { border-right: none; border-bottom: 1px solid var(--gray-mid); }
       .teams-grid { grid-template-columns: 1fr; }
@@ -707,7 +762,7 @@
         <em>But the whole puzzle has never been put together.</em>
       </h1>
       <p class="opening-sub">
-        You&rsquo;ve both sacrificed a lot to build your business and your family. You&rsquo;ve thought through the will, the succession plan, the insurance, the entity documents, the business strategy &mdash; and followed through on most of it. But it still feels like the pieces aren&rsquo;t quite in the right place. Fitting them together has quietly become a second job for one of you and a night shift for the other.
+        You&rsquo;ve both sacrificed a lot to build your business and your family. You&rsquo;ve thought through the will, the succession plan, the insurance, the entity documents, the business strategy &mdash; and followed through on most of it. But it still feels like the pieces aren&rsquo;t quite in the right place. Fitting them together has quietly become a second job for one of you and a night shift for the other. That second job is the one I take.
       </p>
     </div>
   </section>
@@ -763,7 +818,7 @@
         </div>
         <div class="answer-content">
           <p class="answer-quote">
-            I do. I assemble the whole picture, find what&rsquo;s missing, and keep it current &mdash; so it stops being what one of you does after everyone else has called it a night.
+            I do. And not as a checklist you take home &mdash; I do the gathering, make the calls, and schedule the appointments. I assemble the whole picture, find what&rsquo;s missing, and keep it current &mdash; so it stops being what one of you does after everyone else has called it a night.
           </p>
           <p class="answer-support">
             I work with owner&#8209;operated businesses and the families behind them &mdash; connecting what nobody else does: the business, the household, and those advising both.
@@ -816,7 +871,7 @@
       <p class="section-label reveal">The Work</p>
       <h2 class="section-heading reveal">What I actually do.</h2>
       <p class="section-sub reveal">
-        A combination of paperwork, strategy, and clarification.
+        A combination of paperwork, strategy, and clarification &mdash; done for you, not handed to you as homework.
       </p>
       <div class="work-grid">
 
@@ -864,7 +919,7 @@
           <span class="work-card-num">06</span>
           <p class="work-card-title">Household Budgeting &amp; Gap Analysis</p>
           <p class="work-card-body">
-            Personal cash flow, income statement, balance sheet, and general retirement projections, along with a standing, prioritized list of what&rsquo;s open, who it belongs with, and when it needs to happen. The <a href="#gapcheck">Readiness Inventory</a> on this page is a short version of that list &mdash; the real one is longer and specific to your family.
+            Personal cash flow, income statement, and balance sheet, along with a standing, prioritized list of what&rsquo;s open, who it belongs with, and when it needs to happen. The <a href="#gapcheck">Readiness Inventory</a> on this page is a short version of that list &mdash; the real one is longer and specific to your family.
           </p>
         </div>
 
@@ -925,12 +980,12 @@
         <div class="how-step reveal">
           <div class="how-step-num">2</div>
           <p class="how-step-title">Integration Assessment</p>
-          <p class="how-step-body">A full review of your documents, entities, advisors, business, and open items &mdash; assembled into one current picture, with a prioritized list of what comes next.</p>
+          <p class="how-step-body">A full review of your documents, entities, advisors, business, and open items. You hand over what you have; I gather the rest, schedule the conversations with your attorney, CPA, and agent, and assemble it all into one current picture with a prioritized list of what comes next.</p>
         </div>
         <div class="how-step reveal">
           <div class="how-step-num">3</div>
           <p class="how-step-title">Ongoing Integration</p>
-          <p class="how-step-body">Advisor coordination, succession work, document upkeep, and quarterly check&#8209;ins &mdash; so the picture stays current, and you don&rsquo;t go ten years down the road without another update.</p>
+          <p class="how-step-body">Advisor coordination, succession work, document upkeep, and quarterly check&#8209;ins &mdash; I make the calls and keep the follow&#8209;through on my calendar, not yours &mdash; so the picture stays current, and you don&rsquo;t go ten years down the road without another update.</p>
         </div>
       </div>
     </div>
@@ -956,7 +1011,7 @@
       <form class="contact-form reveal" name="contact" method="POST" action="https://api.web3forms.com/submit">
         <input type="hidden" name="access_key" value="[YOUR_WEB3FORMS_KEY]" />
         <input type="hidden" name="subject" value="New Inquiry - Molokai Family &amp; Business Integration Website" />
-        <input type="hidden" name="redirect" value="https://[YOURDOMAIN]/thanks.html" />
+        <input type="hidden" name="redirect" value="https://molokaiintegration.com/thanks.html" />
         <input type="checkbox" name="botcheck" style="display:none;" />
         <input type="hidden" name="gap_check_summary" id="gapCheckSummary" value="" />
         <div class="form-row">
@@ -993,7 +1048,7 @@
       </form>
       <p class="contact-alt reveal">
         Prefer email? Reach me directly at
-        <a href="mailto:matthew@[YOURDOMAIN]">matthew@[YOURDOMAIN]</a>
+        <a href="mailto:matthew@molokaiintegration.com">matthew@molokaiintegration.com</a>
       </p>
     </div>
   </section>
@@ -1208,6 +1263,7 @@
     }
 
     function renderIntro() {
+      quizCard.classList.remove('qmode');
       quizCard.innerHTML =
         '<div style="margin:auto;text-align:center;max-width:540px;">' +
           '<h3 class="quiz-question" style="flex-grow:0;margin-bottom:1.4rem;">Where does your family plan actually stand?</h3>' +
@@ -1221,30 +1277,56 @@
         '</div>';
     }
 
+    function shellHTML(group, pos, total, showKeys, stripRight) {
+      let tiles = '', segs = '';
+      for (let i = 1; i <= total; i++) {
+        const st = i < pos ? 'done' : i === pos ? 'now' : 'todo';
+        tiles += '<div class="q-tile ' + st + '"></div>';
+        segs += '<div class="q-seg ' + st + '"></div>';
+      }
+      return '<div class="q-rail">' +
+          '<p class="q-rail-label">Readiness Inventory</p>' +
+          '<p class="q-count">' + String(pos).padStart(2, '0') + '</p>' +
+          '<p class="q-count-sub">of ' + total + ' questions</p>' +
+          '<div class="q-rail-bottom">' +
+            '<p class="q-tiles-label">Your picture so far</p>' +
+            '<div class="q-tiles">' + tiles + '</div>' +
+            (showKeys ? '<p class="q-keys">Keys: Y &middot; N &middot; ?</p>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="q-strip">' +
+          '<div class="q-strip-meta">' +
+            '<span class="quiz-group">' + group + '</span>' +
+            '<span class="q-strip-count">' + (stripRight || (pos + ' <span>OF ' + total + '</span>')) + '</span>' +
+          '</div>' +
+          '<div class="q-segs">' + segs + '</div>' +
+        '</div>';
+    }
+
     function renderQuestion() {
       const item = QUESTIONS[step];
       const list = asked();
       const pos = list.indexOf(step) + 1;
       const total = list.length;
-      const pct = ((pos - 1) / total) * 100;
       const firstStep = prevFrom(step - 1) < 0;
+      quizCard.classList.add('qmode');
       quizCard.innerHTML =
-        '<div class="quiz-progress-wrap">' +
-          '<div class="quiz-progress-meta">' +
+        shellHTML(item.g, pos, total, true) +
+        '<div class="q-main">' +
+          '<div class="quiz-progress-meta" style="margin-bottom:1.3rem;">' +
             '<span class="quiz-group">' + item.g + '</span>' +
             '<span class="quiz-step-num">Question ' + pos + ' of ' + total + '</span>' +
           '</div>' +
-          '<div class="quiz-bar"><div class="quiz-bar-fill" style="width:' + pct + '%"></div></div>' +
-        '</div>' +
-        '<h3 class="quiz-question">' + item.q + '</h3>' +
-        '<div class="quiz-options">' +
-          '<button class="quiz-opt" onclick="answer(\'yes\')"><span class="quiz-opt-key">Y</span>Yes — this is in place and current</button>' +
-          '<button class="quiz-opt" onclick="answer(\'no\')"><span class="quiz-opt-key">N</span>No — this has not been done</button>' +
-          '<button class="quiz-opt" onclick="answer(\'unsure\')"><span class="quiz-opt-key">?</span>Not sure — I couldn’t say for certain</button>' +
-        '</div>' +
-        '<div class="quiz-nav">' +
-          '<button class="quiz-back" onclick="goBack()"' + (firstStep ? ' disabled' : '') + '>&larr; Back</button>' +
-          '<span class="quiz-note">Your answers stay in your browser.</span>' +
+          '<h3 class="quiz-question">' + item.q + '</h3>' +
+          '<div class="quiz-options">' +
+            '<button class="quiz-opt" onclick="answer(\'yes\')"><span class="quiz-opt-key">Y</span>Yes — this is in place and current</button>' +
+            '<button class="quiz-opt" onclick="answer(\'no\')"><span class="quiz-opt-key">N</span>No — this has not been done</button>' +
+            '<button class="quiz-opt" onclick="answer(\'unsure\')"><span class="quiz-opt-key">?</span>Not sure — I couldn’t say for certain</button>' +
+          '</div>' +
+          '<div class="quiz-nav">' +
+            '<button class="quiz-back" onclick="goBack()"' + (firstStep ? ' disabled' : '') + '>&larr; Back</button>' +
+            '<span class="quiz-note">Your answers stay in your browser.</span>' +
+          '</div>' +
         '</div>';
     }
 
@@ -1254,19 +1336,21 @@
         opts += '<button class="quiz-opt" onclick="answerClosing(\'' + o.v + '\')">' +
                 '<span class="quiz-opt-key">&middot;</span>' + o.label + '</button>';
       });
+      const total = asked().length;
+      quizCard.classList.add('qmode');
       quizCard.innerHTML =
-        '<div class="quiz-progress-wrap">' +
-          '<div class="quiz-progress-meta">' +
+        shellHTML('One Last Question', total + 1, total + 1, false, '&#10003;') +
+        '<div class="q-main">' +
+          '<div class="quiz-progress-meta closing-meta" style="margin-bottom:1.3rem;">' +
             '<span class="quiz-group">One Last Question</span>' +
             '<span class="quiz-step-num">Not counted in your results</span>' +
           '</div>' +
-          '<div class="quiz-bar"><div class="quiz-bar-fill" style="width:100%"></div></div>' +
-        '</div>' +
-        '<h3 class="quiz-question">' + CLOSING.q + '</h3>' +
-        '<div class="quiz-options">' + opts + '</div>' +
-        '<div class="quiz-nav">' +
-          '<button class="quiz-back" onclick="goBack()">&larr; Back</button>' +
-          '<span class="quiz-note">This one is just for me.</span>' +
+          '<h3 class="quiz-question">' + CLOSING.q + '</h3>' +
+          '<div class="quiz-options">' + opts + '</div>' +
+          '<div class="quiz-nav">' +
+            '<button class="quiz-back" onclick="goBack()">&larr; Back</button>' +
+            '<span class="quiz-note">This one is just for me.</span>' +
+          '</div>' +
         '</div>';
     }
 
@@ -1280,6 +1364,7 @@
     }
 
     function renderResults() {
+      quizCard.classList.remove('qmode');
       const list = asked();
       const gaps = openItems();
       const open = gaps.length;
@@ -1325,6 +1410,7 @@
         urgent.forEach(u => { bullets += '<li>' + u.item.gap + '</li>'; });
         html +=
           '<div class="urgent-flag">' +
+            '<p class="urgent-kicker">Time&#8209;Sensitive</p>' +
             '<p class="urgent-flag-head">' +
               (urgent.length === 1
                 ? 'One of these is time&#8209;sensitive.'
@@ -1349,7 +1435,7 @@
           '</div>';
       } else {
         html +=
-          '<p class="quiz-items-label">Where I&rsquo;d Start</p>' +
+          '<p class="quiz-items-label primary">Where I&rsquo;d Start</p>' +
           '<p class="quiz-items-note">Of your ' + open + ' open item' + (open === 1 ? '' : 's') +
           ', ' + (starts.length === 1 ? 'this is the one' : 'these are the ' + starts.length) +
           ' I would take first. The order matters more than the pace &mdash; several of these depend on each other, and doing them out of sequence usually means paying for the same work twice.</p>';
@@ -1375,20 +1461,27 @@
         if (rest.length) {
           html +=
             '<p class="quiz-items-label" style="margin-top:2.2rem;">Then, Roughly In This Order</p>' +
-            '<p class="quiz-items-note">Still open, but each of these reads better once the items above are settled.</p>';
-          rest.forEach(g => {
+            '<p class="quiz-items-note">Still open, but each of these reads better once the items above are settled.</p>' +
+            '<div class="ledger">';
+          rest.forEach((g, i) => {
             const tag = g.kind === 'unsure' ? 'Not sure' : 'Not in place';
             const cls = g.kind === 'unsure' ? ' unsure' : '';
             html +=
-              '<div class="gap-item">' +
-                '<div class="gap-item-top">' +
-                  '<span class="gap-item-title">' + g.item.gap + '</span>' +
-                  '<span class="gap-tag' + cls + '">' + tag + '</span>' +
+              '<div class="ledger-row">' +
+                '<button class="ledger-head" onclick="toggleLedger(this)">' +
+                  '<span class="ledger-num">' + (starts.length + i + 1) + '</span>' +
+                  '<span class="ledger-title">' + g.item.gap + '</span>' +
+                  '<span class="gap-tag sm' + cls + '">' + tag + '</span>' +
+                  '<span class="ledger-toggle">+</span>' +
+                '</button>' +
+                '<div class="ledger-body">' +
+                  '<span class="gap-tag sm' + cls + '">' + tag + '</span>' +
+                  '<p class="gap-item-why" style="margin-bottom:0.5rem;">' + g.item.why + '</p>' +
+                  '<p class="gap-item-who">Usually sits with: <b>' + g.item.who + '</b></p>' +
                 '</div>' +
-                '<p class="gap-item-why">' + g.item.why + '</p>' +
-                '<p class="gap-item-who">Usually sits with: <b>' + g.item.who + '</b></p>' +
               '</div>';
           });
+          html += '</div>';
         }
 
         if (unsureCount > 0) {
@@ -1422,7 +1515,7 @@
           '<p class="quiz-cta-body">' +
             (open === 0
               ? 'A short conversation is usually enough to tell whether a well‑built plan is still describing the family it was built for. No cost, no obligation, and both of you are welcome on the call.'
-              : 'This list is the beginning of a conversation, not the end of one. A free discovery call — ideally with both of you — is where we work out what actually matters first, what can wait, and whether I am the right person to help you close it.') +
+              : 'This list is the beginning of a conversation, not the end of one. A free discovery call — ideally with both of you — is where we work out what actually matters first, what can wait, and whether I am the right person to close it for you.') +
           '</p>' +
           '<div class="quiz-result-actions">' +
             '<a href="#contact" class="btn-primary" onclick="sendResults()">Let&rsquo;s Set Up a Conversation &rarr;</a>' +
@@ -1556,7 +1649,7 @@
         '<div class="pr-foot">' +
           '<p class="pr-contact">' +
             '<b>Matthew Sweeney, CFA</b> &nbsp;&middot;&nbsp; Molokai Family &amp; Business Integration<br>' +
-            'matthew@[YOURDOMAIN] &nbsp;&middot;&nbsp; Wake Forest, NC &nbsp;&middot;&nbsp; Serving the Triangle and Charlotte, the Mississippi Coast, and North Florida' +
+            'matthew@molokaiintegration.com &nbsp;&middot;&nbsp; Wake Forest, NC &nbsp;&middot;&nbsp; Serving the Triangle and Charlotte, the Mississippi Coast, and North Florida' +
           '</p>' +
           '<p class="pr-disclaimer">' +
             'This is an organizational checklist offered for general educational purposes. The ordering reflects how these projects are typically sequenced. It is not legal, tax, or investment advice, it does not consider your particular circumstances, and it does not evaluate any document you hold. Molokai Family &amp; Business Integration is not a registered investment adviser; investment advisory services are offered separately through Molokai Investments LLC, a registered investment adviser in the State of North Carolina.' +
@@ -1586,23 +1679,28 @@
 
       try {
         const { PDFDocument, StandardFonts, rgb, PDFName, PDFBool } = PDFLib;
-        const W = 612, H = 792, M = 54, CW = W - M * 2;
+        const W = 612, H = 792, M = 54, CW = W - M * 2, FOOT = 48;
         const BLUE = rgb(0.102, 0.227, 0.431);
         const INK = rgb(0.102, 0.102, 0.180);
         const MUTED = rgb(0.353, 0.392, 0.471);
         const AMBER = rgb(0.604, 0.420, 0.122);
+        const AMBER_BG = rgb(0.992, 0.965, 0.910);
         const LINE = rgb(0.784, 0.816, 0.867);
-        const FAINT = rgb(0.894, 0.906, 0.925);
+        const SILVER = rgb(0.541, 0.604, 0.710);
+        const FIELD = rgb(0.961, 0.965, 0.973);
+        const WHITE = rgb(1, 1, 1);
 
         const doc = await PDFDocument.create();
         const form = doc.getForm();
         const body = await doc.embedFont(StandardFonts.Helvetica);
         const bodyB = await doc.embedFont(StandardFonts.HelveticaBold);
+        const bodyI = await doc.embedFont(StandardFonts.HelveticaOblique);
         const serif = await doc.embedFont(StandardFonts.TimesRoman);
+        const serifI = await doc.embedFont(StandardFonts.TimesRomanItalic);
 
         let page, y;
         function newPage() { page = doc.addPage([W, H]); y = H - M; }
-        function room(h) { if (y - h < M) { newPage(); return true; } return false; }
+        function room(h) { if (y - h < FOOT) { newPage(); return true; } return false; }
         function wrap(str, font, size, maxW) {
           const words = plain(str).split(/\s+/).filter(Boolean);
           const lines = []; let cur = '';
@@ -1640,40 +1738,44 @@
 
         newPage();
 
-        /* ---- header ---- */
+        /* ---- masthead (page 1 only) ---- */
+        page.drawRectangle({ x: 0, y: H - 96, width: W, height: 96, color: BLUE });
         page.drawText('MOLOKAI  ·  FAMILY & BUSINESS INTEGRATION',
-          { x: M, y: y - 8, size: 7.5, font: bodyB, color: BLUE });
-        y -= 22;
-        page.drawText('The Readiness Inventory', { x: M, y: y - 20, size: 22, font: serif, color: BLUE });
-        y -= 28;
+          { x: M, y: 760, size: 7.5, font: bodyB, color: LINE });
+        page.drawText('The Readiness Inventory', { x: M, y: 726, size: 27, font: serif, color: WHITE });
         const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        page.drawText('Completed ' + today, { x: M, y: y - 8, size: 8, font: body, color: MUTED });
-        y -= 16;
-        rule(BLUE, 1.5); y -= 16;
+        page.drawText('Completed ' + today, { x: M, y: 708, size: 8, font: body, color: SILVER });
+        y = 682;
 
         para('I built this so you would have something useful whether or not we ever speak. Everything below is what you told me is still open, numbered in the order I would work through it, and sorted by who you would take it to. The note fields are yours to type into.',
           body, 8.5, MUTED, 12);
-        y -= 8;
+        y -= 10;
 
-        /* ---- completion grid ---- */
-        let tx = M;
+        /* ---- score row: number | tiles | legend ---- */
+        const rowTop = y;
+        page.drawText(String(open), { x: M, y: rowTop - 30, size: 34, font: serif, color: BLUE });
+        const nw = serif.widthOfTextAtSize(String(open), 34);
+        page.drawText(' of ' + totalAsked, { x: M + nw, y: rowTop - 30, size: 15, font: serif, color: SILVER });
+        page.drawText('PIECES STILL MISSING', { x: M, y: rowTop - 46, size: 7, font: bodyB, color: MUTED });
+        let tx = 200, ty = rowTop - 16, tileRows = 1, col = 0;
         ordered.forEach(o => {
+          if (col === 8) { col = 0; tx = 200; ty -= 20; tileRows++; }
           const isOpen = o.kind !== 'yes';
-          if (tx + 18 > W - M) { tx = M; y -= 22; }
-          page.drawRectangle({ x: tx, y: y - 16, width: 16, height: 16,
-            color: isOpen ? rgb(1, 1, 1) : BLUE,
-            borderColor: isOpen ? LINE : BLUE, borderWidth: 1,
+          page.drawRectangle({ x: tx, y: ty, width: 16, height: 16,
+            color: isOpen ? WHITE : BLUE,
+            borderColor: isOpen ? SILVER : BLUE, borderWidth: 1,
             borderDashArray: isOpen ? [2, 2] : undefined });
-          tx += 20;
+          tx += 20; col++;
         });
-        y -= 26;
-        page.drawText('Filled = in place    Outlined = still missing    Shown in the order to work through them',
-          { x: M, y: y, size: 7.5, font: body, color: MUTED });
-        y -= 20;
+        let legY = rowTop - 8;
+        ['Filled = in place', 'Outlined = still missing'].forEach(t => {
+          page.drawText(t, { x: 380, y: legY - 8, size: 8, font: body, color: MUTED }); legY -= 11;
+        });
+        wrap('Shown in the order to work through them', body, 8, 178).forEach(l => {
+          page.drawText(l, { x: 380, y: legY - 8, size: 8, font: body, color: MUTED }); legY -= 11;
+        });
+        y = rowTop - Math.max(56, 16 + tileRows * 20) - 12;
 
-        page.drawText(open + ' of ' + totalAsked + ' pieces still missing',
-          { x: M, y: y - 14, size: 15, font: serif, color: BLUE });
-        y -= 22;
         para(band.title + ' ' + band.body, body, 8.5, MUTED, 12);
         y -= 10;
 
@@ -1682,15 +1784,15 @@
           const head = urgent.length === 1 ? 'ONE ITEM IS TIME-SENSITIVE'
                                            : urgent.length + ' ITEMS ARE TIME-SENSITIVE';
           const txt = urgent.map(u => plain(u.item.gap)).join('  ·  ');
-          const lines = wrap(txt, body, 8.5, CW - 20);
-          const bh = 22 + lines.length * 11 + 8;
+          const lines = wrap(txt, body, 8.5, CW - 28);
+          const bh = 24 + lines.length * 11 + 9;
           room(bh);
-          page.drawRectangle({ x: M, y: y - bh, width: CW, height: bh, color: rgb(0.992, 0.965, 0.910) });
-          page.drawRectangle({ x: M, y: y - bh, width: 2.5, height: bh, color: AMBER });
-          page.drawText(head, { x: M + 10, y: y - 14, size: 7.5, font: bodyB, color: AMBER });
-          let ly = y - 27;
-          lines.forEach(l => { page.drawText(l, { x: M + 10, y: ly, size: 8.5, font: body, color: INK }); ly -= 11; });
-          y -= bh + 14;
+          page.drawRectangle({ x: M, y: y - bh, width: CW, height: bh, color: AMBER_BG });
+          page.drawRectangle({ x: M, y: y - bh, width: 3, height: bh, color: AMBER });
+          page.drawText(head, { x: M + 14, y: y - 16, size: 7.5, font: bodyB, color: AMBER });
+          let ly = y - 29;
+          lines.forEach(l => { page.drawText(l, { x: M + 14, y: ly, size: 8.5, font: body, color: INK }); ly -= 11; });
+          y -= bh + 16;
         }
 
         /* ---- grouped items with fillable notes ---- */
@@ -1704,33 +1806,36 @@
           PRO_ORDER.forEach(pro => {
             const inPro = numbered.filter(x => x.g.item.pro === pro);
             if (!inPro.length) return;
-            room(56);
-            page.drawText(plain(pro), { x: M, y: y - 13, size: 13, font: serif, color: BLUE });
-            y -= 18; rule(LINE); y -= 12;
-            para(PRO_NOTE[pro], body, 8, MUTED, 11);
-            y -= 6;
+            room(64);
+            page.drawText(plain(pro), { x: M, y: y - 13, size: 15, font: serifI, color: BLUE });
+            y -= 21;
+            page.drawLine({ start: { x: M, y: y }, end: { x: M + 36, y: y }, thickness: 1.5, color: BLUE });
+            y -= 12;
+            para(PRO_NOTE[pro], bodyI, 8, MUTED, 11);
+            y -= 8;
             inPro.forEach(x => {
-              const titleLines = wrap(x.n + '. ' + plain(x.g.item.gap) +
-                (x.g.kind === 'unsure' ? '  (not sure)' : ''), bodyB, 10, CW);
-              const whyLines = wrap(x.g.item.why, body, 8.5, CW);
-              room(titleLines.length * 13 + whyLines.length * 11 + 54);
+              const titleLines = wrap(plain(x.g.item.gap) +
+                (x.g.kind === 'unsure' ? '  (not sure)' : ''), bodyB, 10, CW - 24);
+              const whyLines = wrap(x.g.item.why, body, 8.5, CW - 24);
+              room(titleLines.length * 13 + whyLines.length * 11 + 76);
+              page.drawText(x.n + '.', { x: M, y: y - 10, size: 12, font: serif, color: BLUE });
               titleLines.forEach(l => {
-                page.drawText(l, { x: M, y: y - 10, size: 10, font: bodyB, color: INK }); y -= 13;
+                page.drawText(l, { x: M + 24, y: y - 10, size: 10, font: bodyB, color: INK }); y -= 13;
               });
               whyLines.forEach(l => {
-                page.drawText(l, { x: M, y: y - 8.5, size: 8.5, font: body, color: MUTED }); y -= 11;
+                page.drawText(l, { x: M + 24, y: y - 8.5, size: 8.5, font: body, color: MUTED }); y -= 11;
               });
-              y -= 3;
-              page.drawText('NOTES', { x: M, y: y - 6, size: 6, font: body, color: LINE });
-              y -= 11;
+              y -= 5;
+              page.drawText('N O T E S', { x: M + 24, y: y - 6, size: 6, font: body, color: SILVER });
+              y -= 10;
               const fld = form.createTextField('note_' + (++fieldN));
               fld.setText('');
               fld.enableMultiline();
-              fld.addToPage(page, { x: M, y: y - 38, width: CW, height: 38,
-                borderColor: FAINT, borderWidth: 1, backgroundColor: rgb(1, 1, 1), textColor: INK });
-              y -= 50;
+              fld.addToPage(page, { x: M + 24, y: y - 40, width: CW - 24, height: 40,
+                borderWidth: 0, backgroundColor: FIELD, textColor: INK });
+              y -= 54;
             });
-            y -= 6;
+            y -= 8;
           });
         }
 
@@ -1744,16 +1849,18 @@
             ', plus the ones only the two of you can close. Each of those people will do their piece well. None of them will see the others’ work.';
           const p2 = 'And several of these only make sense in relation to each other. The valuation sizes the insurance. The transition plan waits on the buy-sell. The estate documents have to agree with the business documents. Done out of order, you pay for the same work twice.';
           const p3 = 'Holding all of that in one picture, in the right order, and keeping it current as things change is a job. Right now it is yours, on top of everything else. It does not have to be.';
-          const p4 = 'Send this back to me and I will tell you what I would take first and why — specific to your situation, not this generic ordering. No charge, no obligation, and no pitch if it isn’t a fit.';
+          const p4 = 'Send this back to me and I will tell you what I would take first and why — specific to your situation, not this generic ordering. That conversation is free. Or hand the whole list to me and I will make the calls, schedule the appointments, and see it through. No obligation either way, and no pitch if it isn’t a fit.';
           const all = [p1, p2, p3].map(t => wrap(t, body, 8.5, CW - 24));
           const off = wrap(p4, body, 9, CW - 24);
-          const bh = 30 + all.reduce((a, l) => a + l.length * 12 + 6, 0) + 12 + off.length * 12 + 14;
+          const bh = 44 + all.reduce((a, l) => a + l.length * 12 + 6, 0) + 12 + off.length * 12 + 14;
           room(bh);
           page.drawRectangle({ x: M, y: y - bh, width: CW, height: bh,
             borderColor: BLUE, borderWidth: 1, color: rgb(1, 1, 1) });
-          let by = y - 20;
-          page.drawText('What this list doesn’t do', { x: M + 12, y: by, size: 13, font: serif, color: BLUE });
-          by -= 18;
+          let by = y - 22;
+          page.drawText('What this list doesn’t do', { x: M + 12, y: by, size: 15, font: serifI, color: BLUE });
+          by -= 8;
+          page.drawLine({ start: { x: M + 12, y: by }, end: { x: M + 48, y: by }, thickness: 1.5, color: BLUE });
+          by -= 14;
           all.forEach(lines => {
             lines.forEach(l => { page.drawText(l, { x: M + 12, y: by, size: 8.5, font: body, color: INK }); by -= 12; });
             by -= 6;
@@ -1772,11 +1879,20 @@
         page.drawText('Matthew Sweeney, CFA   ·   Molokai Family & Business Integration',
           { x: M, y: y - 9, size: 9, font: bodyB, color: BLUE });
         y -= 13;
-        page.drawText('matthew@[YOURDOMAIN]   ·   Wake Forest, NC   ·   Serving the Triangle and Charlotte, the Mississippi Coast, and North Florida',
+        page.drawText('matthew@molokaiintegration.com   ·   Wake Forest, NC   ·   Serving the Triangle and Charlotte, the Mississippi Coast, and North Florida',
           { x: M, y: y - 8, size: 8, font: body, color: INK });
         y -= 16;
         para('This is an organizational checklist offered for general educational purposes. The ordering reflects how these projects are typically sequenced. It is not legal, tax, or investment advice, it does not consider your particular circumstances, and it does not evaluate any document you hold. Molokai Family & Business Integration is not a registered investment adviser; investment advisory services are offered separately through Molokai Investments LLC, a registered investment adviser in the State of North Carolina.',
           body, 7, MUTED, 9.5);
+
+        /* ---- page footers ---- */
+        const pages = doc.getPages();
+        pages.forEach((p, i) => {
+          p.drawLine({ start: { x: M, y: 30 }, end: { x: W - M, y: 30 }, thickness: 0.5, color: LINE });
+          p.drawText('MOLOKAI · READINESS INVENTORY', { x: M, y: 20, size: 6.5, font: body, color: SILVER });
+          const pt = 'PAGE ' + (i + 1) + ' OF ' + pages.length;
+          p.drawText(pt, { x: W - M - body.widthOfTextAtSize(pt, 6.5), y: 20, size: 6.5, font: body, color: SILVER });
+        });
 
         form.acroForm.dict.set(PDFName.of('NeedAppearances'), PDFBool.True);
 
@@ -1853,6 +1969,24 @@
         box.value = summary + '\n\nI would like to talk through this list.';
       }
     };
+
+    window.toggleLedger = function (btn) {
+      const row = btn.closest('.ledger-row');
+      row.classList.toggle('open');
+      btn.querySelector('.ledger-toggle').innerHTML = row.classList.contains('open') ? '&minus;' : '+';
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (step < 0 || step >= QUESTIONS.length) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+      const r = quizCard.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) return;
+      const k = e.key.toLowerCase();
+      if (k === 'y') { e.preventDefault(); answer('yes'); }
+      else if (k === 'n') { e.preventDefault(); answer('no'); }
+      else if (k === '?' || k === '/' || k === 'u') { e.preventDefault(); answer('unsure'); }
+    });
 
     renderIntro();
 
