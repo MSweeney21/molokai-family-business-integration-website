@@ -85,35 +85,88 @@
     .opening {
       background: var(--blue);
       padding: 8.5rem 5vw 10rem;
-      text-align: center;
       position: relative;
       overflow: hidden;
-    }
-    .opening::before {
-      content: ''; position: absolute;
-      top: -160px; right: -100px; width: 460px; height: 460px;
-      border-radius: 50%; background: rgba(200,208,221,0.05); pointer-events: none;
     }
     .opening::after {
       content: ''; position: absolute;
       bottom: -180px; left: -60px; width: 340px; height: 340px;
       border-radius: 50%; background: rgba(200,208,221,0.04); pointer-events: none;
     }
-    .opening-inner { max-width: 980px; margin: 0 auto; position: relative; }
+    .opening-inner {
+      max-width: 1200px; margin: 0 auto; position: relative;
+      display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+      gap: 4rem; align-items: center;
+    }
     .opening-eyebrow {
       font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
-      color: var(--silver-light); margin-bottom: 1.8rem;
+      color: var(--silver-light); margin-bottom: 1.7rem;
     }
     .opening-headline {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.95rem, 3.4vw, 3.05rem);
-      font-weight: 300; line-height: 1.22; color: var(--white); margin-bottom: 1.8rem;
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      font-weight: 300; line-height: 1.22; color: var(--white);
+      margin-bottom: 0; text-wrap: balance;
     }
     .opening-headline em { font-style: italic; color: var(--silver-light); }
+    .opening-rule { width: 48px; height: 1px; background: var(--silver); margin: 1.7rem 0; }
     .opening-sub {
-      font-size: 0.92rem; line-height: 1.9;
-      color: rgba(255,255,255,0.66);
-      max-width: 700px; margin: 0 auto;
+      font-size: 0.95rem; line-height: 1.9;
+      color: rgba(255,255,255,0.7);
+      max-width: 46ch; margin: 0 0 2.5rem;
+    }
+    .opening-sub strong { color: var(--white); font-weight: 400; }
+    .opening-ctas { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
+    .opening-btn {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      background: var(--white); color: var(--blue); text-decoration: none;
+      padding: 1.05rem 2.2rem;
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+      transition: gap 0.2s, background 0.2s;
+    }
+    .opening-btn:hover { gap: 1.2rem; background: var(--gray-bg); }
+    .opening-link {
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--silver-light); text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.28); padding-bottom: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .opening-link:hover { color: var(--white); border-color: var(--white); }
+
+    /* hero motif — the Inventory's tile language, previewed */
+    .opening-visual { display: flex; flex-direction: column; align-items: center; gap: 1.6rem; }
+    .hero-tiles {
+      display: grid; grid-template-columns: repeat(5, clamp(48px, 4.6vw, 62px));
+      gap: clamp(8px, 0.8vw, 12px);
+    }
+    .h-tile {
+      aspect-ratio: 1; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Jost', sans-serif; font-size: 0.85rem;
+      opacity: 0; transform: translateY(10px);
+      animation: htIn 0.6s ease forwards;
+    }
+    .h-tile.f {
+      background: rgba(255,255,255,0.92); color: var(--blue);
+      box-shadow: 0 6px 18px rgba(15,35,71,0.35);
+    }
+    .h-tile.d {
+      border: 2px dashed rgba(200,208,221,0.5); color: rgba(200,208,221,0.75);
+      background: rgba(255,255,255,0.04);
+      animation: htIn 0.6s ease forwards, htPulse 4.5s ease-in-out infinite;
+    }
+    @keyframes htIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes htPulse {
+      0%, 100% { border-color: rgba(200,208,221,0.5); }
+      50% { border-color: rgba(200,208,221,0.24); }
+    }
+    .hero-tiles-caption {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.05rem; font-weight: 300; color: var(--silver-light);
+      text-align: center; line-height: 1.5;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .h-tile, .h-tile.d { animation: none; opacity: 1; transform: none; }
     }
 
     /* SPLIT */
@@ -602,7 +655,12 @@
     @media (max-width: 768px) {
       nav { padding: 1rem 5vw; }
       .nav-wordmark, .nav-link { display: none; }
-      .opening { padding: 7rem 5vw 4rem; }
+      .opening { padding: 7rem 5vw 7rem; }
+      .opening-inner { grid-template-columns: 1fr; gap: 2.6rem; }
+      .opening-visual { order: 2; }
+      .hero-tiles { grid-template-columns: repeat(5, 44px); gap: 8px; }
+      .opening-ctas { gap: 1.1rem; }
+      .opening-btn { width: 100%; justify-content: center; }
       .split { padding: 3.5rem 5vw 4rem; }
       .split-panel { padding: 2.3rem 1.7rem; }
       .split-ctas { flex-direction: column; align-items: stretch; }
@@ -756,14 +814,40 @@
   <!-- OPENING -->
   <section class="opening">
     <div class="opening-inner">
-      <p class="opening-eyebrow">Family &amp; Business Integration &middot; Wake Forest, NC</p>
-      <h1 class="opening-headline">
-        You&rsquo;re proud of what you&rsquo;ve built.<br>
-        <em>But the whole puzzle has never been put together.</em>
-      </h1>
-      <p class="opening-sub">
-        You&rsquo;ve both sacrificed a lot to build your business and your family. You&rsquo;ve thought through the will, the succession plan, the insurance, the entity documents, the business strategy &mdash; and followed through on most of it. But it still feels like the pieces aren&rsquo;t quite in the right place. Fitting them together has quietly become a second job for one of you and a night shift for the other. That second job is the one I take.
-      </p>
+      <div class="opening-copy">
+        <p class="opening-eyebrow">Family &amp; Business Integration &middot; Wake Forest, NC</p>
+        <h1 class="opening-headline">
+          You&rsquo;re proud of what you&rsquo;ve built. <em>But the whole puzzle has never been put together.</em>
+        </h1>
+        <div class="opening-rule"></div>
+        <p class="opening-sub">
+          Fitting the pieces together has quietly become a second job for one of you &mdash; and a night shift for the other. <strong>That second job is the one I take.</strong>
+        </p>
+        <div class="opening-ctas">
+          <a href="#gapcheck" class="opening-btn">See What&rsquo;s Missing &rarr;</a>
+          <a href="#contact" class="opening-link">Start a Conversation</a>
+        </div>
+      </div>
+      <div class="opening-visual">
+        <div class="hero-tiles" aria-hidden="true">
+          <span class="h-tile f" style="animation-delay:0ms">&#10003;</span>
+          <span class="h-tile d" style="animation-delay:70ms">?</span>
+          <span class="h-tile f" style="animation-delay:140ms">&#10003;</span>
+          <span class="h-tile f" style="animation-delay:210ms">&#10003;</span>
+          <span class="h-tile f" style="animation-delay:280ms">&#10003;</span>
+          <span class="h-tile f" style="animation-delay:350ms">&#10003;</span>
+          <span class="h-tile f" style="animation-delay:420ms">&#10003;</span>
+          <span class="h-tile d" style="animation-delay:490ms">?</span>
+          <span class="h-tile f" style="animation-delay:560ms">&#10003;</span>
+          <span class="h-tile d" style="animation-delay:630ms">?</span>
+          <span class="h-tile f" style="animation-delay:700ms">&#10003;</span>
+          <span class="h-tile d" style="animation-delay:770ms">?</span>
+          <span class="h-tile f" style="animation-delay:840ms">&#10003;</span>
+          <span class="h-tile d" style="animation-delay:910ms">?</span>
+          <span class="h-tile f" style="animation-delay:980ms">&#10003;</span>
+        </div>
+        <p class="hero-tiles-caption">Fifteen pieces. Five minutes to see yours.</p>
+      </div>
     </div>
   </section>
 
