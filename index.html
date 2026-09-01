@@ -203,8 +203,16 @@
     }
     /* THE ANSWER — joining statement + who is making it */
     .answer-lead {
-      margin: 3.4rem auto 1.8rem; max-width: 720px; text-align: center;
-      font-size: 0.92rem; line-height: 1.85; color: var(--text-muted);
+      margin: 3.2rem auto 2.2rem; max-width: 780px; text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 2.1vw, 1.8rem);
+      font-weight: 400; line-height: 1.4; color: var(--blue);
+      text-wrap: balance;
+    }
+    .answer-lead em { font-style: italic; color: var(--blue-mid); }
+    .answer-trade {
+      display: block; margin-top: 1rem;
+      font-style: normal; font-size: 0.92em; color: var(--blue-mid);
     }
     .answer-card {
       background: var(--white); border: 1px solid var(--gray-mid);
@@ -817,7 +825,7 @@
       <div class="opening-copy">
         <p class="opening-eyebrow">Family &amp; Business Integration &middot; Wake Forest, NC</p>
         <h1 class="opening-headline">
-          You&rsquo;re proud of what you&rsquo;ve built. <em>But the whole puzzle has never been put together.</em>
+          You&rsquo;re proud of what you&rsquo;ve built together. <em>But the whole puzzle has never felt fully connected.</em>
         </h1>
         <div class="opening-rule"></div>
         <p class="opening-sub">
@@ -865,7 +873,7 @@
             You make dozens of decisions a day &mdash; payroll, customers, marketing, resource allocation &mdash; and you love doing it.
           </p>
           <p class="split-body">
-            You&rsquo;ve put a strong team around you: employees, a CPA, an attorney, a banker, a financial advisor &mdash; each holding an important piece. Your team got assembled, but the whole picture didn&rsquo;t.
+            You&rsquo;ve put a strong team around you: employees, a CPA, an attorney, a banker, a financial advisor &mdash; each holding an important piece. Your team is assembled, but the whole picture doesn&rsquo;t feel like it is.
           </p>
           <p class="split-body">
             So the assembling falls to you. The business strategy. The succession plan. The will. The insurance policies. All necessary, and all taking time you don&rsquo;t have.
@@ -879,7 +887,7 @@
           <p class="split-role">Spouse &middot; Coordinator &middot; Family Operations</p>
           <div class="split-rule"></div>
           <p class="split-body">
-            You didn&rsquo;t set out to do this. First a form. Then a phone call. Then another &mdash; until one day you were the one who understood where everything was.
+            You didn&rsquo;t set out to do this. First a form. Then a phone call. Then another &mdash; until one day you are the one who understands where everything is.
           </p>
           <p class="split-body">
             Now you gather the documents, chase what&rsquo;s missing, and know the details nobody else does. You&rsquo;re the first call for most of the advisors. But the pieces still feel disconnected because nobody has explained how they fit.
@@ -893,7 +901,7 @@
       </div>
 
       <p class="answer-lead reveal">
-        It&rsquo;s never been anybody&rsquo;s job to put all the pieces together. So nobody has.
+        It&rsquo;s never been anybody&rsquo;s job to put all the pieces together. <em>So nobody has.</em>
       </p>
 
       <div class="answer-card reveal">
@@ -902,7 +910,7 @@
         </div>
         <div class="answer-content">
           <p class="answer-quote">
-            I do. And not as a checklist you take home &mdash; I do the gathering, make the calls, and schedule the appointments. I assemble the whole picture, find what&rsquo;s missing, and keep it current &mdash; so it stops being what one of you does after everyone else has called it a night.
+            This is where I come in. And not just by giving you a checklist you take home &mdash; I do the document gathering, make the calls, and schedule the appointments. I assemble the whole picture, find what&rsquo;s missing, and keep it current &mdash; so it stops being what one of you does after everyone else has called it a night. <span class="answer-trade">You focus on building your legacy while I focus on the details.</span>
           </p>
           <p class="answer-support">
             I work with owner&#8209;operated businesses and the families behind them &mdash; connecting what nobody else does: the business, the household, and those advising both.
@@ -935,7 +943,7 @@
         Whether the retirement account is actually funded. Whether the operating agreement and the will name the same business successor. Whether the beneficiaries you named in 2011 are still the ones you&rsquo;d name today.
       </p>
       <p class="problem-pull reveal">
-        Families are rarely hurt by bad advice &mdash; just good advice pushed to tomorrow.
+        Families are rarely hurt by bad advice &mdash; just good advice put off to tomorrow.
       </p>
     </div>
   </section>
@@ -1020,7 +1028,7 @@
   <section class="teams">
     <div class="teams-inner">
       <p class="section-label reveal">Your Existing Team</p>
-      <h2 class="section-heading reveal">Either way, you&rsquo;re covered.</h2>
+      <h2 class="section-heading reveal">Either way, I&rsquo;ve got you covered.</h2>
       <div class="teams-grid">
         <div class="teams-card reveal">
           <p class="teams-card-tag">If you already have advisors</p>
@@ -1044,7 +1052,7 @@
   <section class="how-section">
     <div style="max-width: 1200px; margin: 0 auto;">
       <p class="section-label reveal">How It Works</p>
-      <h2 class="section-heading reveal">From scattered pieces to a finished picture.</h2>
+      <h2 class="section-heading reveal">From scattered pieces to a complete, understandable picture.</h2>
       <p class="section-sub reveal">Every engagement begins the same way &mdash; with a genuine conversation, and with both of you in the room.</p>
       <div class="how-steps">
         <div class="how-step reveal">
@@ -1343,7 +1351,7 @@
         '<div style="margin:auto;text-align:center;max-width:540px;">' +
           '<h3 class="quiz-question" style="flex-grow:0;margin-bottom:1.4rem;">Where does your family plan actually stand?</h3>' +
           '<p style="font-size:0.87rem;line-height:1.9;color:var(--text-muted);margin-bottom:1.2rem;">' +
-            'Answer honestly rather than optimistically. If your answer is <em>not sure</em>, that’s fine — you’re not alone, and knowing what you can’t confirm is itself a place to start.' +
+            'Answer honestly rather than optimistically. If your answer is <em>not sure</em>, that’s fine — you’re not alone, and knowing what you can’t confirm is a place to start.' +
           '</p>' +
           '<p style="font-size:0.87rem;line-height:1.9;color:var(--text-muted);margin-bottom:2.2rem;">' +
             'Take it together if you can. If the two of you answer a question differently, that is a legitimate difference to work through.' +
