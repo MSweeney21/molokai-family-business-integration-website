@@ -521,6 +521,44 @@
       .ledger-head .gap-tag { display: none; }
       .ledger-body .gap-tag { display: inline-block; margin-bottom: 0.5rem; }
     }
+    /* couple mode */
+    .mode-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .mode-note {
+      margin-top: 1.4rem; font-size: 0.78rem; line-height: 1.7;
+      color: var(--text-muted); max-width: 460px; margin-left: auto; margin-right: auto;
+    }
+    .setup-fields {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      margin: 1.8rem auto 2rem; max-width: 460px; text-align: left;
+    }
+    .q-rail-turn {
+      font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--blue-mid); font-weight: 500; margin-top: 0.5rem;
+    }
+    .tile.div { border: 2px solid var(--silver); background: var(--white); color: var(--blue-mid); }
+    .legend-swatch.div { border: 2px solid var(--silver); background: var(--white); }
+    .gap-tag.div { color: var(--blue-mid); background: rgba(42,79,143,0.1); }
+    .div-flag {
+      background: rgba(42,79,143,0.05); border-left: 3px solid var(--blue-mid);
+      padding: 1.8rem 2rem; margin-bottom: 2.6rem;
+    }
+    .div-kicker {
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--blue-mid); font-weight: 500; margin-bottom: 0.6rem;
+    }
+    .div-head {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.4rem;
+      font-weight: 500; color: var(--blue); margin-bottom: 0.7rem;
+    }
+    .div-body { font-size: 0.85rem; line-height: 1.8; color: var(--text); margin-bottom: 1.1rem; }
+    .div-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 0.6rem 1.4rem; padding: 0.65rem 0; flex-wrap: wrap;
+      border-top: 1px solid var(--gray-mid); font-size: 0.85rem;
+    }
+    .div-row-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 500; color: var(--blue); }
+    .div-row-answers { color: var(--text-muted); }
+    .div-row-answers b { font-weight: 500; color: var(--text); }
     .quiz-clear {
       background: var(--gray-bg); border-left: 3px solid var(--green);
       padding: 1.5rem 1.7rem; font-size: 0.86rem; line-height: 1.8; color: var(--text-muted);
@@ -677,6 +715,7 @@
       .work-grid { grid-template-columns: 1fr; }
       .quiz-card { padding: 1.8rem 1.4rem; }
       .start-item { flex-direction: column; gap: 0.6rem; }
+      .setup-fields { grid-template-columns: 1fr; }
       .how-steps { grid-template-columns: 1fr; gap: 3rem; }
       .how-steps::before { display: none; }
       .form-row { grid-template-columns: 1fr; }
@@ -1319,15 +1358,69 @@
     };
 
     const quizCard = document.getElementById('quizCard');
-    let step = -1;
+    let step = -1;                     /* -1 intro · -2 couple setup · -3 handoff */
+    let mode = 'solo';                 /* 'solo' | 'couple' */
+    let person = 0;                    /* whose turn, couple mode */
+    const names = ['Partner 1', 'Partner 2'];
+    const answersP = [new Array(QUESTIONS.length).fill(null),
+                      new Array(QUESTIONS.length).fill(null)];
+    let answers = answersP[0];         /* the sheet being written this turn */
+    const closingP = [null, null];
     let closingAnswer = null;
-    const answers = new Array(QUESTIONS.length).fill(null);
 
-    /* a question is asked only when its condition is met */
+    function escName(v, fb) {
+      v = String(v || '').replace(/[<>&"'`]/g, '').trim().slice(0, 18);
+      return v || fb;
+    }
+    function lab(v) {
+      return v === null ? 'not asked' :
+             v === 'yes' ? 'In place' :
+             v === 'no' ? 'Not in place' : 'Not sure';
+    }
+
+    /* a question is asked only when its condition is met — for the current sheet */
     function applies(i) {
       const c = QUESTIONS[i].cond;
       if (!c) return true;
       return answers[c.on] === c.val;
+    }
+    function appliesFor(p, i) {
+      const c = QUESTIONS[i].cond;
+      if (!c) return true;
+      return answersP[p][c.on] === c.val;
+    }
+
+    /* one row per question asked to anybody, with the combined verdict.
+       In place requires BOTH to say yes; any difference is flagged. */
+    function combinedRows() {
+      const rows = [];
+      QUESTIONS.forEach((q, i) => {
+        if (mode === 'solo') {
+          if (!appliesFor(0, i)) return;
+          const a = answersP[0][i];
+          rows.push({ item: q, a: a, b: null, kind: a, div: false });
+          return;
+        }
+        const inA = appliesFor(0, i), inB = appliesFor(1, i);
+        if (!inA && !inB) return;
+        const a = inA ? answersP[0][i] : null;
+        const b = inB ? answersP[1][i] : null;
+        let div, kind;
+        if (inA && inB) {
+          div = a !== b;
+          if (a === 'yes' && b === 'yes') kind = 'yes';
+          else if (!div) kind = a;
+          else kind = (a === 'no' || b === 'no') ? 'no' : 'unsure';
+        } else {
+          /* only one of them was even asked (their buy-sell answers differ) */
+          div = true;
+          const solo = inA ? a : b;
+          kind = solo === 'yes' ? 'unsure' : solo;
+        }
+        rows.push({ item: q, a: a, b: b, kind: kind, div: div });
+      });
+      rows.sort((x, y) => x.item.rank - y.item.rank);
+      return rows;
     }
     function asked() {
       const out = [];
@@ -1353,12 +1446,60 @@
           '<p style="font-size:0.87rem;line-height:1.9;color:var(--text-muted);margin-bottom:1.2rem;">' +
             'Answer honestly rather than optimistically. If your answer is <em>not sure</em>, that’s fine — you’re not alone, and knowing what you can’t confirm is a place to start.' +
           '</p>' +
-          '<p style="font-size:0.87rem;line-height:1.9;color:var(--text-muted);margin-bottom:2.2rem;">' +
-            'Take it together if you can. If the two of you answer a question differently, that is a legitimate difference to work through.' +
-          '</p>' +
-          '<button class="btn-primary" onclick="startQuiz()">Begin the Inventory &rarr;</button>' +
+          '<div class="mode-btns">' +
+            '<button class="btn-primary" onclick="startQuiz()">Just Me &mdash; Begin &rarr;</button>' +
+            '<button class="btn-ghost" onclick="startCoupleSetup()">Both of Us &mdash; Together &rarr;</button>' +
+          '</div>' +
+          '<p class="mode-note">Taking it together, you&rsquo;ll each answer separately, one after the other &mdash; and your results will show exactly where the two of you differ. That difference is a legitimate thing to work through, and often the most useful part.</p>' +
         '</div>';
     }
+
+    function renderCoupleSetup() {
+      quizCard.classList.remove('qmode');
+      quizCard.innerHTML =
+        '<div style="margin:auto;text-align:center;max-width:560px;">' +
+          '<h3 class="quiz-question" style="flex-grow:0;margin-bottom:1.2rem;">Two of you, one at a time.</h3>' +
+          '<p style="font-size:0.87rem;line-height:1.9;color:var(--text-muted);">' +
+            'You&rsquo;ll each answer the same questions &mdash; separately, without conferring, and without seeing each other&rsquo;s answers. First names are optional; they just make your results easier to read.' +
+          '</p>' +
+          '<div class="setup-fields">' +
+            '<div class="form-group"><label for="cName0">Going first (optional)</label>' +
+              '<input type="text" id="cName0" maxlength="18" placeholder="First name" autocomplete="off" /></div>' +
+            '<div class="form-group"><label for="cName1">Going second (optional)</label>' +
+              '<input type="text" id="cName1" maxlength="18" placeholder="First name" autocomplete="off" /></div>' +
+          '</div>' +
+          '<button class="btn-primary" onclick="beginCouple()">Start the First Turn &rarr;</button>' +
+        '</div>';
+    }
+
+    function renderHandoff() {
+      quizCard.classList.remove('qmode');
+      quizCard.innerHTML =
+        '<div style="margin:auto;text-align:center;max-width:560px;">' +
+          '<p class="quiz-group" style="margin-bottom:1.2rem;">First Half Is In</p>' +
+          '<h3 class="quiz-question" style="flex-grow:0;margin-bottom:1.4rem;">' + names[0] + ', hand it over.</h3>' +
+          '<p style="font-size:0.87rem;line-height:1.9;color:var(--text-muted);margin-bottom:2.2rem;">' +
+            names[1] + ' answers the same questions next &mdash; for yourself, not for the two of you, and no comparing notes yet. Where your answers differ is the point.' +
+          '</p>' +
+          '<button class="btn-primary" onclick="beginSecond()">I&rsquo;m ' + names[1] + ' &mdash; Start My Questions &rarr;</button>' +
+        '</div>';
+    }
+
+    window.startCoupleSetup = function () { step = -2; renderCoupleSetup(); };
+
+    window.beginCouple = function () {
+      names[0] = escName(document.getElementById('cName0').value, 'Partner 1');
+      names[1] = escName(document.getElementById('cName1').value, 'Partner 2');
+      mode = 'couple'; person = 0; answers = answersP[0];
+      step = nextFrom(0); renderQuestion();
+      quizCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    window.beginSecond = function () {
+      person = 1; answers = answersP[1];
+      step = nextFrom(0); renderQuestion();
+      quizCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     function shellHTML(group, pos, total, showKeys, stripRight) {
       let tiles = '', segs = '';
@@ -1369,6 +1510,7 @@
       }
       return '<div class="q-rail">' +
           '<p class="q-rail-label">Readiness Inventory</p>' +
+          (mode === 'couple' ? '<p class="q-rail-turn">' + names[person] + '&rsquo;s turn</p>' : '') +
           '<p class="q-count">' + String(pos).padStart(2, '0') + '</p>' +
           '<p class="q-count-sub">of ' + total + ' questions</p>' +
           '<div class="q-rail-bottom">' +
@@ -1408,7 +1550,7 @@
           '</div>' +
           '<div class="quiz-nav">' +
             '<button class="quiz-back" onclick="goBack()"' + (firstStep ? ' disabled' : '') + '>&larr; Back</button>' +
-            '<span class="quiz-note">Your answers stay in your browser.</span>' +
+            '<span class="quiz-note">' + (mode === 'couple' ? names[person] + ' is answering.' : 'Your answers stay in your browser.') + '</span>' +
           '</div>' +
         '</div>';
     }
@@ -1438,36 +1580,30 @@
     }
 
     function openItems() {
-      const gaps = [];
-      asked().forEach(i => {
-        if (answers[i] !== 'yes') gaps.push({ item: QUESTIONS[i], kind: answers[i] });
-      });
-      gaps.sort((a, b) => a.item.rank - b.item.rank);
-      return gaps;
+      return combinedRows().filter(r => r.kind !== 'yes');
     }
 
     function renderResults() {
       quizCard.classList.remove('qmode');
-      const list = asked();
-      const gaps = openItems();
+      const ordered = combinedRows();
+      const gaps = ordered.filter(r => r.kind !== 'yes');
       const open = gaps.length;
-      const totalAsked = list.length;
+      const totalAsked = ordered.length;
       const yesCount = totalAsked - open;
-      const unsureCount = gaps.filter(g => g.kind === 'unsure').length;
+      const divRows = gaps.filter(g => g.div);
+      const unsureCount = gaps.filter(g => !g.div && g.kind === 'unsure').length;
       const band = BANDS.find(b => open <= b.max);
       const starts = gaps.slice(0, 3);
       const rest = gaps.slice(3);
 
-      const ordered = list
-        .map(i => ({ item: QUESTIONS[i], kind: answers[i] }))
-        .sort((a, b) => a.item.rank - b.item.rank);
-
       let tiles = '';
       ordered.forEach(o => {
-        const isOpen = o.kind !== 'yes';
-        tiles += '<div class="tile ' + (isOpen ? 'open' : 'filled') +
-                 '" title="' + (isOpen ? 'Open: ' : 'In place: ') + o.item.gap + '">' +
-                 (isOpen ? '?' : '&#10003;') + '</div>';
+        const cls = o.kind === 'yes' ? 'filled' : (o.div ? 'div' : 'open');
+        const glyph = o.kind === 'yes' ? '&#10003;' : (o.div ? '&ne;' : '?');
+        const title = (mode === 'couple' && o.div)
+          ? names[0] + ': ' + lab(o.a) + ' / ' + names[1] + ': ' + lab(o.b) + ' — ' + o.item.gap
+          : (o.kind === 'yes' ? 'In place: ' : 'Open: ') + o.item.gap;
+        tiles += '<div class="tile ' + cls + '" title="' + title + '">' + glyph + '</div>';
       });
 
       let html =
@@ -1475,8 +1611,9 @@
         '<div class="grid-wrap">' +
           '<div class="grid-tiles">' + tiles + '</div>' +
           '<div class="grid-legend">' +
-            '<span><i class="legend-swatch filled"></i>In place</span>' +
+            '<span><i class="legend-swatch filled"></i>' + (mode === 'couple' ? 'Both said in place' : 'In place') + '</span>' +
             '<span><i class="legend-swatch open"></i>Still missing</span>' +
+            (mode === 'couple' && divRows.length ? '<span><i class="legend-swatch div"></i>You answered differently</span>' : '') +
           '</div>' +
           '<p class="grid-caption">Your picture, left to right, in the order I&rsquo;d work through it.</p>' +
         '</div>' +
@@ -1485,6 +1622,11 @@
           '<p class="quiz-group" style="margin-bottom:1.1rem;">Pieces Still Missing</p>' +
           '<p class="quiz-band">' + band.title + '</p>' +
           '<p class="quiz-band-body">' + band.body + '</p>' +
+          (mode === 'couple'
+            ? '<p class="quiz-band-body" style="margin-top:0.9rem;"><b style="font-weight:500;color:var(--text);">Taken together:</b> ' +
+              names[0] + ' and ' + names[1] + ' gave the same answer on ' + (totalAsked - divRows.length) + ' of ' + totalAsked +
+              (divRows.length ? ', and answered differently on ' + divRows.length + '.' : '.') + '</p>'
+            : '') +
         '</div>';
 
       const urgent = gaps.filter(g => g.item.urgent);
@@ -1511,10 +1653,33 @@
           '</div>';
       }
 
+      if (mode === 'couple' && divRows.length) {
+        let rowsHtml = '';
+        divRows.forEach(d => {
+          rowsHtml +=
+            '<div class="div-row">' +
+              '<span class="div-row-title">' + d.item.gap + '</span>' +
+              '<span class="div-row-answers"><b>' + names[0] + ':</b> ' + lab(d.a) +
+                ' &nbsp;&middot;&nbsp; <b>' + names[1] + ':</b> ' + lab(d.b) + '</span>' +
+            '</div>';
+        });
+        html +=
+          '<div class="div-flag">' +
+            '<p class="div-kicker">Answered Differently</p>' +
+            '<p class="div-head">' +
+              (divRows.length === 1 ? 'One question split the two of you.' : divRows.length + ' questions split the two of you.') +
+            '</p>' +
+            '<p class="div-body">' +
+              'These aren&rsquo;t mistakes &mdash; they&rsquo;re the most useful part of your results. A piece only one of you can confirm isn&rsquo;t truly in place yet, however certain that one of you is. Worth talking through together before anything else on this list.' +
+            '</p>' +
+            rowsHtml +
+          '</div>';
+      }
+
       if (open === 0) {
         html +=
           '<div class="quiz-clear">' +
-            'You answered yes to every question. That is rare, and it means the hard part is already behind you. The useful question now is not whether these things exist, but when each was last read — side by side, against the others. Documents that were correct the day they were signed drift quietly as a business grows, and drift is the thing nobody schedules a meeting about.' +
+            (mode === 'couple' ? 'You both answered yes to every question. That is genuinely rare.' : 'You answered yes to every question. That is rare, and it means the hard part is already behind you.') + ' The useful question now is not whether these things exist, but when each was last read — side by side, against the others. Documents that were correct the day they were signed drift quietly as a business grows, and drift is the thing nobody schedules a meeting about.' +
           '</div>';
       } else {
         html +=
@@ -1524,8 +1689,8 @@
           ' I would take first. The order matters more than the pace &mdash; several of these depend on each other, and doing them out of sequence usually means paying for the same work twice.</p>';
 
         starts.forEach((g, idx) => {
-          const tag = g.kind === 'unsure' ? 'Not sure' : 'Not in place';
-          const cls = g.kind === 'unsure' ? ' unsure' : '';
+          const tag = g.div ? 'You differed' : g.kind === 'unsure' ? 'Not sure' : 'Not in place';
+          const cls = g.div ? ' div' : g.kind === 'unsure' ? ' unsure' : '';
           html +=
             '<div class="start-item">' +
               '<div class="start-rank">' + (idx + 1) + '</div>' +
@@ -1535,6 +1700,7 @@
                   '<span class="gap-tag' + cls + '">' + tag + '</span>' +
                 '</div>' +
                 '<p class="gap-item-why">' + g.item.why + '</p>' +
+                (g.div ? '<p class="gap-item-who" style="margin-bottom:0.6rem;"><b>' + names[0] + ':</b> ' + lab(g.a) + ' &nbsp;&middot;&nbsp; <b>' + names[1] + ':</b> ' + lab(g.b) + '</p>' : '') +
                 '<p class="gap-item-first"><b>Why here:</b> ' + g.item.first + '</p>' +
                 '<p class="gap-item-who">Usually sits with: <b>' + g.item.who + '</b></p>' +
               '</div>' +
@@ -1547,8 +1713,8 @@
             '<p class="quiz-items-note">Still open, but each of these reads better once the items above are settled.</p>' +
             '<div class="ledger">';
           rest.forEach((g, i) => {
-            const tag = g.kind === 'unsure' ? 'Not sure' : 'Not in place';
-            const cls = g.kind === 'unsure' ? ' unsure' : '';
+            const tag = g.div ? 'You differed' : g.kind === 'unsure' ? 'Not sure' : 'Not in place';
+            const cls = g.div ? ' div' : g.kind === 'unsure' ? ' unsure' : '';
             html +=
               '<div class="ledger-row">' +
                 '<button class="ledger-head" onclick="toggleLedger(this)">' +
@@ -1559,6 +1725,7 @@
                 '</button>' +
                 '<div class="ledger-body">' +
                   '<span class="gap-tag sm' + cls + '">' + tag + '</span>' +
+                  (g.div ? '<p class="gap-item-who" style="margin:0.5rem 0;"><b>' + names[0] + ':</b> ' + lab(g.a) + ' &nbsp;&middot;&nbsp; <b>' + names[1] + ':</b> ' + lab(g.b) + '</p>' : '') +
                   '<p class="gap-item-why" style="margin-bottom:0.5rem;">' + g.item.why + '</p>' +
                   '<p class="gap-item-who">Usually sits with: <b>' + g.item.who + '</b></p>' +
                 '</div>' +
@@ -1570,7 +1737,7 @@
         if (unsureCount > 0) {
           html +=
             '<div class="quiz-aside">' +
-              '<b>On the ' + unsureCount + ' you weren&rsquo;t sure about:</b> uncertainty is a finding, not a blank. A plan only one of you can confirm is not yet a plan the family can rely on &mdash; which is exactly the condition this work exists to fix.' +
+              '<b>On the ' + unsureCount + ' ' + (mode === 'couple' ? 'neither of you was' : 'you weren&rsquo;t') + ' sure about:</b> uncertainty is a finding, not a blank. A plan only one of you can confirm is not yet a plan the family can rely on &mdash; which is exactly the condition this work exists to fix.' +
             '</div>';
         }
 
@@ -1582,7 +1749,7 @@
         if (yesCount > 0) {
           html +=
             '<div class="quiz-aside">' +
-              '<b>You answered yes on ' + yesCount + ' of ' + totalAsked + '.</b> Those are worth a second look too &mdash; not because you were wrong, but because &ldquo;in place&rdquo; and &ldquo;still accurate&rdquo; are different things, and only one of them protects anybody.' +
+              '<b>' + (mode === 'couple' ? 'You both answered yes on ' : 'You answered yes on ') + yesCount + ' of ' + totalAsked + '.</b> Those are worth a second look too &mdash; not because you were wrong, but because &ldquo;in place&rdquo; and &ldquo;still accurate&rdquo; are different things, and only one of them protects anybody.' +
             '</div>';
         }
       }
@@ -1591,9 +1758,9 @@
         '<div class="quiz-cta-block">' +
           '<p class="quiz-cta-head">' + (open === 0 ? 'Worth a second set of eyes.' : 'Let&rsquo;s take the first one together.') + '</p>' +
           (closingAnswer === 'yes'
-            ? '<p class="quiz-cta-body" style="color:var(--text);"><b style="font-weight:500;">You said the coordinating is taking hours and you still don&rsquo;t have a clear view of the strategy.</b> That is the whole reason this work exists. It is real work, it is skilled work, and it does not have to be yours.</p>'
+            ? '<p class="quiz-cta-body" style="color:var(--text);"><b style="font-weight:500;">' + (mode === 'couple' ? 'At least one of you said' : 'You said') + ' the coordinating is taking hours and there still isn&rsquo;t a clear view of the strategy.</b> That is the whole reason this work exists. It is real work, it is skilled work, and it does not have to be yours.</p>'
             : closingAnswer === 'sometimes'
-              ? '<p class="quiz-cta-body" style="color:var(--text);">You said the coordinating sometimes leaves you without a clear view of the strategy. That gap tends to widen quietly as a business grows &mdash; it rarely closes on its own.</p>'
+              ? '<p class="quiz-cta-body" style="color:var(--text);">' + (mode === 'couple' ? 'One of you said' : 'You said') + ' the coordinating sometimes leaves you without a clear view of the strategy. That gap tends to widen quietly as a business grows &mdash; it rarely closes on its own.</p>'
               : '') +
           '<p class="quiz-cta-body">' +
             (open === 0
@@ -1650,7 +1817,7 @@
       ordered.forEach(o => {
         const isOpen = o.kind !== 'yes';
         tiles += '<div class="pr-tile ' + (isOpen ? 'open' : 'filled') + '">' +
-                 (isOpen ? '?' : '&#10003;') + '</div>';
+                 (isOpen ? (o.div ? '&ne;' : '?') : '&#10003;') + '</div>';
       });
 
       let h =
@@ -1690,7 +1857,8 @@
           inPro.forEach(x => {
             h += '<div class="pr-item">' +
                    '<p class="pr-item-title"><span class="pr-num">' + x.n + '.</span> ' + x.g.item.gap +
-                     (x.g.kind === 'unsure' ? ' <span class="pr-unsure">(not sure)</span>' : '') +
+                     (x.g.div ? ' <span class="pr-unsure">(' + names[0] + ': ' + lab(x.g.a).toLowerCase() + ' / ' + names[1] + ': ' + lab(x.g.b).toLowerCase() + ')</span>'
+                              : x.g.kind === 'unsure' ? ' <span class="pr-unsure">(not sure)</span>' : '') +
                    '</p>' +
                    '<p class="pr-item-why">' + x.g.item.why + '</p>' +
                    '<div class="pr-notes"></div>' +
@@ -1810,14 +1978,13 @@
         }
 
         /* ---- data ---- */
-        const list = asked();
-        const gaps = openItems();
+        const ordered = combinedRows();
+        const gaps = ordered.filter(r => r.kind !== 'yes');
         const open = gaps.length;
-        const totalAsked = list.length;
+        const totalAsked = ordered.length;
         const band = BANDS.find(b => open <= b.max);
         const urgent = gaps.filter(g => g.item.urgent);
-        const ordered = list.map(i => ({ item: QUESTIONS[i], kind: answers[i] }))
-                            .sort((a, b) => a.item.rank - b.item.rank);
+        const divRows = gaps.filter(g => g.div);
 
         newPage();
 
@@ -1827,7 +1994,8 @@
           { x: M, y: 760, size: 7.5, font: bodyB, color: LINE });
         page.drawText('The Readiness Inventory', { x: M, y: 726, size: 27, font: serif, color: WHITE });
         const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        page.drawText('Completed ' + today, { x: M, y: 708, size: 8, font: body, color: SILVER });
+        page.drawText((mode === 'couple' ? 'Taken together by ' + plain(names[0]) + ' & ' + plain(names[1]) + '  ·  ' : 'Completed ') + today,
+          { x: M, y: 708, size: 8, font: body, color: SILVER });
         y = 682;
 
         para('I built this so you would have something useful whether or not we ever speak. Everything below is what you told me is still open, numbered in the order I would work through it, and sorted by who you would take it to. The note fields are yours to type into.',
@@ -1846,12 +2014,14 @@
           const isOpen = o.kind !== 'yes';
           page.drawRectangle({ x: tx, y: ty, width: 16, height: 16,
             color: isOpen ? WHITE : BLUE,
-            borderColor: isOpen ? SILVER : BLUE, borderWidth: 1,
-            borderDashArray: isOpen ? [2, 2] : undefined });
+            borderColor: isOpen ? SILVER : BLUE, borderWidth: o.div ? 1.6 : 1,
+            borderDashArray: (isOpen && !o.div) ? [2, 2] : undefined });
           tx += 20; col++;
         });
         let legY = rowTop - 8;
-        ['Filled = in place', 'Outlined = still missing'].forEach(t => {
+        (mode === 'couple' && divRows.length
+          ? ['Filled = both said in place', 'Dashed = still missing', 'Solid outline = answered differently']
+          : ['Filled = in place', 'Outlined = still missing']).forEach(t => {
           page.drawText(t, { x: 380, y: legY - 8, size: 8, font: body, color: MUTED }); legY -= 11;
         });
         wrap('Shown in the order to work through them', body, 8, 178).forEach(l => {
@@ -1860,6 +2030,12 @@
         y = rowTop - Math.max(56, 16 + tileRows * 20) - 12;
 
         para(band.title + ' ' + band.body, body, 8.5, MUTED, 12);
+        if (mode === 'couple') {
+          para('Taken together: ' + names[0] + ' and ' + names[1] + ' gave the same answer on ' +
+               (totalAsked - divRows.length) + ' of ' + totalAsked +
+               (divRows.length ? ', and answered differently on ' + divRows.length + '.' : '.'),
+            bodyB, 8.5, INK, 12);
+        }
         y -= 10;
 
         /* ---- time-sensitive ---- */
@@ -1876,6 +2052,29 @@
           let ly = y - 29;
           lines.forEach(l => { page.drawText(l, { x: M + 14, y: ly, size: 8.5, font: body, color: INK }); ly -= 11; });
           y -= bh + 16;
+        }
+
+        /* ---- where you answered differently ---- */
+        if (mode === 'couple' && divRows.length) {
+          const intro = 'These are not mistakes — they are the most useful part of your results. A piece only one of you can confirm is not truly in place yet.';
+          const introLines = wrap(intro, bodyI, 8.5, CW - 28);
+          const rowLines = [];
+          divRows.forEach(d => {
+            wrap(plain(d.item.gap) + '  —  ' + names[0] + ': ' + lab(d.a).toLowerCase() +
+                 '  ·  ' + names[1] + ': ' + lab(d.b).toLowerCase(), body, 8.5, CW - 28)
+              .forEach(l => rowLines.push(l));
+          });
+          const bh2 = 26 + introLines.length * 11 + 6 + rowLines.length * 12 + 10;
+          room(bh2);
+          page.drawRectangle({ x: M, y: y - bh2, width: CW, height: bh2,
+            borderColor: BLUE, borderWidth: 1, color: WHITE });
+          page.drawText('WHERE YOU ANSWERED DIFFERENTLY',
+            { x: M + 14, y: y - 17, size: 7.5, font: bodyB, color: BLUE });
+          let dy = y - 30;
+          introLines.forEach(l => { page.drawText(l, { x: M + 14, y: dy, size: 8.5, font: bodyI, color: MUTED }); dy -= 11; });
+          dy -= 5;
+          rowLines.forEach(l => { page.drawText(l, { x: M + 14, y: dy, size: 8.5, font: body, color: INK }); dy -= 12; });
+          y -= bh2 + 16;
         }
 
         /* ---- grouped items with fillable notes ---- */
@@ -1898,7 +2097,7 @@
             y -= 8;
             inPro.forEach(x => {
               const titleLines = wrap(plain(x.g.item.gap) +
-                (x.g.kind === 'unsure' ? '  (not sure)' : ''), bodyB, 10, CW - 24);
+                (x.g.div ? '  (answered differently)' : x.g.kind === 'unsure' ? '  (not sure)' : ''), bodyB, 10, CW - 24);
               const whyLines = wrap(x.g.item.why, body, 8.5, CW - 24);
               room(titleLines.length * 13 + whyLines.length * 11 + 76);
               page.drawText(x.n + '.', { x: M, y: y - 10, size: 12, font: serif, color: BLUE });
@@ -1995,21 +2194,32 @@
     };
 
     function buildSummary() {
-      const gaps = openItems();
-      const totalAsked = asked().length;
+      const rows = combinedRows();
+      const gaps = rows.filter(r => r.kind !== 'yes');
+      const totalAsked = rows.length;
       const lines = gaps.map((g, i) =>
-        (i + 1) + '. ' + g.item.gap + ' (' + (g.kind === 'unsure' ? 'not sure' : 'not in place') + ')');
+        (i + 1) + '. ' + g.item.gap +
+        (g.div
+          ? ' [ANSWERED DIFFERENTLY — ' + names[0] + ': ' + lab(g.a).toLowerCase() + ' / ' + names[1] + ': ' + lab(g.b).toLowerCase() + ']'
+          : ' (' + (g.kind === 'unsure' ? 'not sure' : 'not in place') + ')'));
+      let head = 'Readiness Inventory result';
+      if (mode === 'couple') head += ' — taken together by ' + names[0] + ' and ' + names[1];
       let tail = '';
-      if (closingAnswer) {
-        tail = '\n\nCoordination question: ' +
-          (closingAnswer === 'yes' ? 'Yes — hours spent coordinating, no clear view of strategy.'
-           : closingAnswer === 'sometimes' ? 'Sometimes.'
-           : 'No — has a clear picture.');
+      function closeLab(v) {
+        return v === 'yes' ? 'Yes — hours spent coordinating, no clear view of strategy.'
+             : v === 'sometimes' ? 'Sometimes.'
+             : v === 'no' ? 'No — has a clear picture.' : '';
+      }
+      if (mode === 'couple' && (closingP[0] || closingP[1])) {
+        tail = '\n\nCoordination question — ' + names[0] + ': ' + closeLab(closingP[0]) +
+               ' ' + names[1] + ': ' + closeLab(closingP[1]);
+      } else if (closingAnswer) {
+        tail = '\n\nCoordination question: ' + closeLab(closingAnswer);
       }
       if (!gaps.length) {
-        return 'Readiness Inventory result: 0 of ' + totalAsked + ' areas open.' + tail;
+        return head + ': 0 of ' + totalAsked + ' areas open.' + tail;
       }
-      return 'Readiness Inventory result: ' + gaps.length + ' of ' + totalAsked +
+      return head + ': ' + gaps.length + ' of ' + totalAsked +
              ' areas open, in suggested order:\n\n' + lines.join('\n') + tail;
     }
 
@@ -2023,7 +2233,19 @@
     };
 
     window.answerClosing = function (val) {
-      closingAnswer = val;
+      closingP[person] = val;
+      if (mode === 'couple' && person === 0) {
+        step = -3;
+        renderHandoff();
+        quizCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      if (mode === 'couple') {
+        const rank = { yes: 2, sometimes: 1, no: 0 };
+        closingAnswer = (rank[closingP[0]] >= rank[closingP[1]]) ? closingP[0] : closingP[1];
+      } else {
+        closingAnswer = val;
+      }
       step = QUESTIONS.length + 1;
       renderResults();
       quizCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2036,8 +2258,11 @@
     };
 
     window.restartQuiz = function () {
-      for (let i = 0; i < answers.length; i++) answers[i] = null;
+      for (let i = 0; i < QUESTIONS.length; i++) { answersP[0][i] = null; answersP[1][i] = null; }
+      closingP[0] = null; closingP[1] = null;
       closingAnswer = null;
+      mode = 'solo'; person = 0; answers = answersP[0];
+      names[0] = 'Partner 1'; names[1] = 'Partner 2';
       step = -1;
       renderIntro();
       document.getElementById('gapcheck').scrollIntoView({ behavior: 'smooth', block: 'start' });
