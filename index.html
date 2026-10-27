@@ -840,6 +840,14 @@
       .pr-disclaimer { font-size: 7pt; line-height: 1.5; color: #5a6478; }
     }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18529261772"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18529261772');
+  </script>
 </head>
 <body>
 
@@ -1085,7 +1093,7 @@
         <div class="how-step reveal">
           <div class="how-step-num">2</div>
           <p class="how-step-title">Integration Assessment</p>
-          <p class="how-step-body">A full review of your documents, entities, advisors, business, and open items. You hand over what you have; I gather the rest &mdash; schedule the conversations with your attorney, CPA, and agent, and assemble it all into one current picture with a prioritized list of next steps.</p>
+          <p class="how-step-body">A full review of your documents, entities, advisors, business, and open items. You hand over what you have; I gather the rest &mdash; schedule the conversations with your attorney, CPA, and agent, and assemble it all into one current picture with a prioritized list of next steps. Assessments start at $3,500, quoted as a flat fee after the discovery call.</p>
         </div>
         <div class="how-step reveal">
           <div class="how-step-num">3</div>
@@ -1566,7 +1574,12 @@
       return combinedRows().filter(r => r.kind !== 'yes');
     }
 
+    let gapCheckConverted = false;
     function renderResults() {
+      if (!gapCheckConverted && typeof gtag === 'function') {
+        gtag('event', 'conversion', {'send_to': 'AW-18529261772/zUXWCIr_8aQdEMyxuINF'});
+        gapCheckConverted = true;
+      }
       quizCard.classList.remove('qmode');
       const ordered = combinedRows();
       const gaps = ordered.filter(r => r.kind !== 'yes');
